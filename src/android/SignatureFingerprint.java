@@ -33,11 +33,28 @@ public class SignatureFingerprint extends CordovaPlugin {
             PackageManager pm = this.cordova.getActivity().getPackageManager();
             int flags = PackageManager.GET_SIGNATURES;
             PackageInfo packageInfo = null;
+                       
+            /*
             try {
                 packageInfo = pm.getPackageInfo(packageName, flags);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
+            */
+            //nabil in case the packageinfi is null then check on API level 28 and above and use PackageManager.GET_SIGNING_CERTIFICATES because PackageManager.GET_SIGNATURES is deprecated
+            try {
+                packageInfo = pm.getPackageInfo(packageName, flags);
+                if((packageInfo == null || packageInfo.signatures == null || packageInfo.signatures.length == 0
+                    || packageInfo.signatures[0] == null) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                        {
+                            flags = PackageManager.GET_SIGNING_CERTIFICATES;
+                            packageInfo = pm.getPackageInfo(packageName, flags);
+                        }
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            
+            
             Signature[] signatures = packageInfo.signatures;
             byte[] cert = signatures[0].toByteArray();
             InputStream input = new ByteArrayInputStream(cert);
@@ -55,8 +72,11 @@ public class SignatureFingerprint extends CordovaPlugin {
             }
             String hexString = null;
             try {
-                MessageDigest md = MessageDigest.getInstance("SHA1");
-                byte[] publicKey = md.digest(c.getEncoded());
+                //nabil use SHA-256 instead of SHA1
+                MessageDigest md = MessageDigest.getInstance("SHA-256");
+        	    byte[] publicKey = md.digest(c.getEncoded());
+                //MessageDigest md = MessageDigest.getInstance("SHA1");
+                //byte[] publicKey = md.digest(c.getEncoded());
                 hexString = byte2HexFormatted(publicKey);
             } catch (NoSuchAlgorithmException e1) {
                 e1.printStackTrace();
