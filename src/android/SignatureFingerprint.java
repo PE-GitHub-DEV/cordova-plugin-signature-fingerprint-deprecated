@@ -19,6 +19,7 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import android.os.Build;
 
 public class SignatureFingerprint extends CordovaPlugin {
 
