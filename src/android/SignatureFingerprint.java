@@ -25,13 +25,22 @@ public class SignatureFingerprint extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+	    //////////////////////////////////
+	    //////////////////////////////////
+	    
+	    cordova.getThreadPool().execute(new Runnable() {
+	    public void run() {
+	    
+	    //////////////////////////////////
+	    //////////////////////////////////  
+		
         if (action.equals("getPackageName")) {
-          callbackContext.success(this.cordova.getActivity().getPackageName());
-          return true;
+          callbackContext.success(cordova.getActivity().getPackageName());
+          //return true;
         }
         if (action.equals("getSignature")) {
-            String packageName = this.cordova.getActivity().getPackageName();
-            PackageManager pm = this.cordova.getActivity().getPackageManager();
+            String packageName = cordova.getActivity().getPackageName();
+            PackageManager pm = cordova.getActivity().getPackageManager();
             int flags = PackageManager.GET_SIGNATURES;
             PackageInfo packageInfo = null;
                        
@@ -85,9 +94,17 @@ public class SignatureFingerprint extends CordovaPlugin {
                 e.printStackTrace();
             }
             callbackContext.success(hexString);
-            return true;
+            //return true;
         }
-        return false;
+        
+        //////////////////////////////////
+        //////////////////////////////////
+        }
+        });
+        //////////////////////////////////
+        //////////////////////////////////
+	    
+        return true;
     }
 
     public static String byte2HexFormatted(byte[] arr) {
