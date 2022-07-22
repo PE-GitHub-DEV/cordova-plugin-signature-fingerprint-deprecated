@@ -25,7 +25,7 @@ public class SignatureFingerprint extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-	    ////////////////////////////////// /* [Azentio] fix #1378944 - Add Thread Runnable */
+	    
 	    
 	    
 	    cordova.getThreadPool().execute(new Runnable() {
@@ -49,7 +49,7 @@ public class SignatureFingerprint extends CordovaPlugin {
                 e.printStackTrace();
             }
             */
-            //nabil in case the packageinfi is null then check on API level 28 and above and use PackageManager.GET_SIGNING_CERTIFICATES because PackageManager.GET_SIGNATURES is deprecated
+            // in case the packageinfi is null then check on API level 28 and above and use PackageManager.GET_SIGNING_CERTIFICATES because PackageManager.GET_SIGNATURES is deprecated
             try {
                 packageInfo = pm.getPackageInfo(packageName, flags);
                 if((packageInfo == null || packageInfo.signatures == null || packageInfo.signatures.length == 0
@@ -80,7 +80,7 @@ public class SignatureFingerprint extends CordovaPlugin {
             }
             String hexString = null;
             try {
-                //nabil use SHA-256 instead of SHA1
+                // use SHA-256 instead of SHA1
                 MessageDigest md = MessageDigest.getInstance("SHA-256");
         	    byte[] publicKey = md.digest(c.getEncoded());
                 //MessageDigest md = MessageDigest.getInstance("SHA1");
@@ -98,7 +98,7 @@ public class SignatureFingerprint extends CordovaPlugin {
 
         }
         });
-        ////////////////////////////////// /* [Azentio] fix #1378944 - Add Thread Runnable */
+        
 	    
         return true;
     }
